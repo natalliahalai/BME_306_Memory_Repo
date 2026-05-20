@@ -24,6 +24,24 @@ execute:
 
 
 ```{r}
+#| label: libraries
+
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(DHARMa)
+# library()
+
+```
+
+
+
+```{r}
+#| label: dataset_loading
+
+
+
 library(readr)
 condition<-read_csv("data/Condition_participants.csv", 
     col_types = cols(participant_id = col_factor(levels = c("1", 
@@ -39,8 +57,6 @@ all_olt <- read_csv("data/olt_processed/all_olt.csv",
 
 ```
 
-
-
 ```{r}
 
 ```
@@ -50,4 +66,3 @@ all_olt <- read_csv("data/olt_processed/all_olt.csv",
 ```{r}
 
 ```
-
