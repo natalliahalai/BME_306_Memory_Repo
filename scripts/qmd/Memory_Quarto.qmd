@@ -1,25 +1,7 @@
 ---
-title: "Memory Subpart of BME 306 Study"
-date: today
-toc: true
-autor: "Natallia Halai und Angela Textor"
-format: 
-  html:
-    
-    embed-resources: true
-    number-sections: true
-    code_fold: true
-project:
-  
-  output_dir: output
-  execute_dir: project
+title: "Untitled"
+format: html
 editor: visual
-editor_options: 
-  chunk_output_type: true
-execute: 
-  warning: false
-  error: false
-  freeze: true
 ---
 
 ## Quarto
