@@ -1,0 +1,44 @@
+10.7320 	WARNING 	We strongly recommend you activate the PTB sound engine in PsychoPy prefs as the preferred audio engine. Its timing is vastly superior. Your prefs are currently set to use ['sounddevice', 'PTB', 'pyo', 'pygame'] (in that order).
+63.5033 	WARNING 	Monitor specification not found. Creating a temporary one...
+66.0174 	EXP 	Created unnamed TextStim = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoLog=True, bold=False, color='white', colorSpace='named', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, font='', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='unnamed TextStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=array([255., 255., 255.]), text=str(...), units='norm', win=Window(...), wrapWidth=1)
+77.4678 	DATA 	Keypress: space
+81.3354 	DATA 	Mouse: Left button down, pos=(829,487)
+83.1549 	DATA 	Mouse:  Left button up, pos=(829,487)
+86.1760 	DATA 	Mouse: Left button down, pos=(856,473)
+86.1766 	DATA 	Mouse:  Left button up, pos=(856,473)
+86.1771 	DATA 	Mouse: Left button down, pos=(856,473)
+86.1775 	DATA 	Mouse:  Left button up, pos=(856,473)
+88.9427 	DATA 	Mouse: Left button down, pos=(1244,634)
+90.7560 	DATA 	Mouse:  Left button up, pos=(1244,634)
+97.6508 	DATA 	Mouse: Left button down, pos=(698,270)
+99.4768 	DATA 	Mouse:  Left button up, pos=(698,270)
+105.2950 	DATA 	Mouse: Left button down, pos=(1220,438)
+107.1179 	DATA 	Mouse:  Left button up, pos=(1220,438)
+112.8544 	DATA 	Mouse: Left button down, pos=(750,485)
+114.6783 	DATA 	Mouse:  Left button up, pos=(750,485)
+122.1802 	DATA 	Mouse: Left button down, pos=(530,137)
+123.9991 	DATA 	Mouse:  Left button up, pos=(530,137)
+129.5572 	DATA 	Mouse: Left button down, pos=(730,626)
+131.3783 	DATA 	Mouse:  Left button up, pos=(730,626)
+139.1372 	DATA 	Mouse: Left button down, pos=(365,621)
+140.9587 	DATA 	Mouse:  Left button up, pos=(365,621)
+148.1843 	DATA 	Mouse: Left button down, pos=(700,121)
+149.9994 	DATA 	Mouse:  Left button up, pos=(700,121)
+155.9129 	DATA 	Mouse: Left button down, pos=(1190,95)
+157.7391 	DATA 	Mouse:  Left button up, pos=(1190,95)
+162.8312 	DATA 	Mouse: Left button down, pos=(1080,278)
+164.6388 	DATA 	Mouse:  Left button up, pos=(1080,278)
+173.4638 	DATA 	Mouse: Left button down, pos=(997,422)
+175.2799 	DATA 	Mouse:  Left button up, pos=(997,422)
+182.3660 	DATA 	Mouse: Left button down, pos=(397,132)
+184.1807 	DATA 	Mouse:  Left button up, pos=(397,132)
+190.2764 	DATA 	Mouse: Left button down, pos=(826,116)
+192.1009 	DATA 	Mouse:  Left button up, pos=(826,116)
+207.0418 	DATA 	Mouse: Left button down, pos=(1081,345)
+208.8639 	DATA 	Mouse:  Left button up, pos=(1081,345)
+209.1022 	EXP 	Created unnamed TextStim = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoLog=True, bold=False, color='white', colorSpace='named', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, font='', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='unnamed TextStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=array([255., 255., 255.]), text=str(...), units='norm', win=Window(...), wrapWidth=1)
+214.4417 	DATA 	Keypress: space
+214.4650 	EXP 	window1: mouseVisible = True
+214.4682 	DEBUG 	Saving data for thisOutputFile ExperimentHandler
+214.4698 	INFO 	saved data to OLT_5GCA_2.00_2_20260508.psydat
+214.4830 	INFO 	saved data to 'OLT_5GCA_2.00_2_20260508.csv'

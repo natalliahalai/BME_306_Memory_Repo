@@ -1,0 +1,46 @@
+1.8003 	WARNING 	We strongly recommend you activate the PTB sound engine in PsychoPy prefs as the preferred audio engine. Its timing is vastly superior. Your prefs are currently set to use ['sounddevice', 'PTB', 'pyo', 'pygame'] (in that order).
+30.1911 	WARNING 	Monitor specification not found. Creating a temporary one...
+31.8564 	EXP 	Created unnamed TextStim = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoLog=True, bold=False, color='white', colorSpace='named', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, font='', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='unnamed TextStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=array([255., 255., 255.]), text=str(...), units='norm', win=Window(...), wrapWidth=1)
+38.5521 	DATA 	Keypress: space
+144.4978 	EXP 	Created unnamed TextStim = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoLog=True, bold=False, color='white', colorSpace='named', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, font='', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='unnamed TextStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=array([255., 255., 255.]), text=str(...), units='norm', win=Window(...), wrapWidth=1)
+147.0542 	DATA 	Keypress: space
+252.9986 	EXP 	Created unnamed TextStim = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoLog=True, bold=False, color='white', colorSpace='named', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, font='', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='unnamed TextStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=array([255., 255., 255.]), text=str(...), units='norm', win=Window(...), wrapWidth=1)
+255.4745 	DATA 	Keypress: space
+258.5244 	DATA 	Mouse: Left button down, pos=(396,292)
+260.3337 	DATA 	Mouse:  Left button up, pos=(396,292)
+265.3428 	DATA 	Mouse: Left button down, pos=(861,121)
+267.1531 	DATA 	Mouse:  Left button up, pos=(861,121)
+272.0887 	DATA 	Mouse: Left button down, pos=(527,255)
+273.8946 	DATA 	Mouse:  Left button up, pos=(527,255)
+281.6177 	DATA 	Mouse: Left button down, pos=(1198,655)
+283.4342 	DATA 	Mouse:  Left button up, pos=(1198,655)
+290.0762 	DATA 	Mouse: Left button down, pos=(738,245)
+291.8953 	DATA 	Mouse:  Left button up, pos=(738,245)
+296.9424 	DATA 	Mouse: Left button down, pos=(683,418)
+298.7558 	DATA 	Mouse:  Left button up, pos=(683,418)
+303.8698 	DATA 	Mouse: Left button down, pos=(1043,429)
+305.6753 	DATA 	Mouse:  Left button up, pos=(1043,429)
+316.9359 	DATA 	Mouse: Left button down, pos=(377,376)
+318.7574 	DATA 	Mouse:  Left button up, pos=(377,376)
+324.0699 	DATA 	Mouse: Left button down, pos=(1203,112)
+325.8780 	DATA 	Mouse:  Left button up, pos=(1203,112)
+332.1766 	DATA 	Mouse: Left button down, pos=(703,775)
+333.9982 	DATA 	Mouse:  Left button up, pos=(703,775)
+340.6131 	DATA 	Mouse: Left button down, pos=(331,78)
+342.4384 	DATA 	Mouse:  Left button up, pos=(331,78)
+346.9325 	DATA 	Mouse: Left button down, pos=(710,662)
+348.7592 	DATA 	Mouse:  Left button up, pos=(710,662)
+353.8135 	DATA 	Keypress: lwindows
+353.8152 	DATA 	Keypress: z
+357.1654 	DATA 	Mouse: Left button down, pos=(893,457)
+358.9801 	DATA 	Mouse:  Left button up, pos=(893,457)
+365.2589 	DATA 	Mouse: Left button down, pos=(995,239)
+367.0803 	DATA 	Mouse:  Left button up, pos=(995,239)
+375.7966 	DATA 	Mouse: Left button down, pos=(882,88)
+377.6200 	DATA 	Mouse:  Left button up, pos=(882,88)
+377.8627 	EXP 	Created unnamed TextStim = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoLog=True, bold=False, color='white', colorSpace='named', contrast=1.0, depth=0, flipHoriz=False, flipVert=False, font='', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='unnamed TextStim', opacity=1.0, ori=0.0, pos=array([0., 0.]), rgb=array([255., 255., 255.]), text=str(...), units='norm', win=Window(...), wrapWidth=1)
+410.6803 	DATA 	Keypress: space
+410.7067 	EXP 	window1: mouseVisible = True
+410.7092 	DEBUG 	Saving data for thisOutputFile ExperimentHandler
+410.7160 	INFO 	saved data to OLT_BME306_7.00_1_20260513_1.psydat
+410.7362 	INFO 	saved data to 'OLT_BME306_7.00_1_20260513_1.csv'

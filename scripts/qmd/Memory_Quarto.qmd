@@ -22,7 +22,6 @@ execute:
   freeze: true
 ---
 
-
 ```{r}
 #| label: libraries
 
@@ -34,8 +33,6 @@ library(DHARMa)
 library(GGally)
 
 ```
-
-
 
 ```{r}
 #| label: dataset_loading
@@ -60,12 +57,8 @@ all_olt$condition<-rep(condition$Condition, each=2)
 
 ```
 
-
-:::{comment_to_self}
--> timepoint 2 score under 0.6
--> time to answer correct??? definition 
--> how many memory pairs were there
--> where is the 3rd patients EEG -> want to see the improvement in memory with increased N3 phase
+::: {comment_to_self}
+-\> timepoint 2 score under 0.6 -\> time to answer correct??? definition -\> how many memory pairs were there -\> where is the 3rd patients EEG -\> want to see the improvement in memory with increased N3 phase
 :::
 
 ```{r}
@@ -73,7 +66,6 @@ ggpairs(all_olt)
 hist(all_olt$percent_correct)
 hist(all_olt$time_for_answer_correct)
 ```
-
 
 ```{r}
 
@@ -118,5 +110,52 @@ all_olt_wide %>%
 
 t.test(all_olt_wide$`1`, all_olt_wide$`2`, paired=TRUE)
 #no statistically significant difference -> also not in boxplots
+```
+
+
+
+
+```{r}
+# Get all csv OLT files
+files <- list.files(
+  "data/OLT_Data/",
+  pattern = "\\.csv$",
+  full.names = TRUE,
+  recursive = TRUE
+)
+
+
+library(readr)
+library(dplyr)
+library(stringr)
+
+all_data <- lapply(files, function(f) {
+
+  # get info
+  parts <- str_split(f, .Platform$file.sep)[[1]]
+  
+  participant <- strsplit(parts[grepl("Participant_", parts)], "_")[[1]][2]
+  timepoint   <- strsplit(parts[grepl("Session_", parts)], "_")[[1]][2]
+  filename    <- tail(parts, 1)
+  
+  
+  oltd <- read.csv(f)
+  minrounds <- min(oltd$cued_recall_round,na.rm = T)
+  olt_info <- oltd %>% 
+    filter(cued_recall_round %in% minrounds) %>% 
+    summarize(percent_correct = sum(answer)/length(answer),
+              time_for_answer_correct = mean(time_for_answer[answer == 1]))
+  
+  olt_info$participant = participant
+  olt_info$timepoint = timepoint
+  olt_info$file = filename
+  
+  olt_info
+})
+all_data <- do.call(rbind, all_data)
+write.csv(all_data,
+          file = "data/all_olt_min.csv",
+          row.names = FALSE)
+
 ```
 
