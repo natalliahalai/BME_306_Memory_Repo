@@ -24,9 +24,20 @@ execute:
 
 
 ```{r}
+library(readr)
+condition<-read_csv("data/Condition_participants.csv", 
+    col_types = cols(participant_id = col_factor(levels = c("1", 
+        "2", "3", "4", "5", "6", "7", "8", 
+        "9")), Condition = col_factor(levels = c("Coffein", 
+        "None"))))
+
+all_olt <- read_csv("data/olt_processed/all_olt.csv", 
+    col_types = cols(participant = col_factor(levels = c("1", 
+        "2", "3", "4", "5", "6", "7", "8", 
+        "9")), timepoint = col_factor(levels = c("1", 
+        "2")), file = col_skip()))
 
 ```
-
 
 
 
