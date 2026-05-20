@@ -31,7 +31,7 @@ library(ggplot2)
 library(dplyr)
 library(tidyverse)
 library(DHARMa)
-# library()
+library(GGally)
 
 ```
 
@@ -41,8 +41,6 @@ library(DHARMa)
 #| label: dataset_loading
 
 
-
-library(readr)
 condition<-read_csv("data/Condition_participants.csv", 
     col_types = cols(participant_id = col_factor(levels = c("1", 
         "2", "3", "4", "5", "6", "7", "8", 
@@ -55,14 +53,70 @@ all_olt <- read_csv("data/olt_processed/all_olt.csv",
         "9")), timepoint = col_factor(levels = c("1", 
         "2")), file = col_skip()))
 
+condition<-condition%>%
+  rename(participant="participant_id")
+
+all_olt$condition<-rep(condition$Condition, each=2)
+
 ```
+
+
+:::{comment_to_self}
+-> timepoint 2 score under 0.6
+-> time to answer correct??? definition 
+-> how many memory pairs were there
+-> where is the 3rd patients EEG -> want to see the improvement in memory with increased N3 phase
+:::
+
+```{r}
+ggpairs(all_olt)
+hist(all_olt$percent_correct)
+hist(all_olt$time_for_answer_correct)
+```
+
 
 ```{r}
 
+ggplot(all_olt, aes(x=timepoint, y=percent_correct))+
+  geom_boxplot()+
+  geom_point() + #position = position_jitter(width = 0, height = 0.2)
+  geom_line(aes(group = participant, color = participant)) 
+
+  # geom_path(aes(group=participant, color=participant), lwd=2, 
+            # position = position_jitter(width = 0, height = 0.2))
+
+
+ggplot(all_olt, aes(x=timepoint, y=percent_correct))+
+  geom_boxplot()+
+  geom_point(aes(color=condition))+ #position = position_jitter(width = 0, height = 0.2)
+  geom_line(aes(group = participant, color=condition)) 
+
+
+# t-test takes differences (e.g. group 2 - 1)
+library(tidyr)
+library(dplyr)
+all_olt_new <- all_olt %>% 
+  select(-time_for_answer_correct)
+
+
+
+all_olt_wide <- all_olt_new %>% 
+  pivot_wider(names_from = timepoint, values_from = percent_correct) 
+
+all_olt_wide %>% 
+  group_by(participant) %>% 
+  reframe(extra_diff = `2`-`1`,
+          x = factor(0)) %>% 
+  ggplot(aes(y = extra_diff, x = x)) +
+  geom_boxplot() +
+  geom_hline(yintercept = 0, color = "red") +
+  geom_point(aes(color = participant), size = 2) +
+  theme_classic() +
+  labs(
+    y = "Response difference group 2-1"
+  )
+
+t.test(all_olt_wide$`1`, all_olt_wide$`2`, paired=TRUE)
+#no statistically significant difference -> also not in boxplots
 ```
 
-
-
-```{r}
-
-```
