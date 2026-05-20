@@ -1,0 +1,27 @@
+% ── THREE ANALYSIS INDICES (McKinnon et al., 2020) ───────────────────────
+%
+%  1. IPD — Initial Pupil Diameter (mm)
+%     Average pupil size in the 200ms BEFORE stimulus onset.
+%     Reflects tonic ANS balance; serves as baseline covariate.
+%     Expected: no group difference in healthy subjects.
+%     Ref: McKinnon et al. (2020) DOI:10.1016/j.biopsycho.2020.107922
+%          Snowden et al. (2016)  DOI:10.1111/psyp.12668
+%
+%  2. ICR — Initial Constriction Response (mm)
+%     Average baseline-corrected pupil size in 500–1000ms post-stimulus.
+%     Computed for NEUTRAL images only (emotional content modulates ICR,
+%     so neutral-only isolates the parasympathetic constriction reflex;
+%     Henderson, Bradley & Lang, 2014 DOI:10.1111/psyp.12236).
+%     More negative = stronger constriction = stronger parasympathetic tone.
+%     Ref: McKinnon et al. (2020); Lowenstein & Loewenfeld (1950)
+%
+%  3. EMPR — Emotional Modulation of Pupil Response (mm)
+%     Average baseline-corrected pupil size in 1000–2000ms post-stimulus,
+%     computed per emotional category, then:
+%       EMPR_Fear   = Fear_window   − Neutral_window
+%       EMPR_Happy  = Happy_window  − Neutral_window
+%       EMPR_Sad    = Sad_window    − Neutral_window
+%     Positive EMPR = pupil larger for emotional vs neutral image.
+%     Reflects sympathetic activation by emotional content.
+%     Ref: McKinnon et al. (2020); Bradley et al. (2008)
+%          DOI:10.1111/j.1469-8986.2008.00654.x
