@@ -36,7 +36,7 @@ library(GGally)
 
 ```{r}
 #| label: dataset_loading
-
+#| include: false
 
 condition<-read_csv("data/processed/Condition_participants.csv", 
     col_types = cols(participant_id = col_factor(levels = c("1", 
@@ -70,18 +70,20 @@ hist(all_olt$time_for_answer_correct)
 ```{r}
 
 ggplot(all_olt, aes(x=timepoint, y=percent_correct))+
-  geom_boxplot()+
-  geom_point() + #position = position_jitter(width = 0, height = 0.2)
-  geom_line(aes(group = participant, color = participant)) 
+  geom_boxplot(outliers = FALSE)+
+  geom_point(aes(color=participant), position=position_jitter(width=0.2, seed=123)) + 
+  geom_line(aes(group = participant, color = participant), position=position_jitter(width=0.2, seed=123))+
+  labs(x="Timepoint of Data Aquisition", y="Percent of Correct Guesses")+
+    theme_light()
 
-  # geom_path(aes(group=participant, color=participant), lwd=2, 
-            # position = position_jitter(width = 0, height = 0.2))
 
 
 ggplot(all_olt, aes(x=timepoint, y=percent_correct))+
-  geom_boxplot()+
-  geom_point(aes(color=condition))+ #position = position_jitter(width = 0, height = 0.2)
-  geom_line(aes(group = participant, color=condition)) 
+  geom_boxplot(outliers = FALSE)+
+  geom_point(aes(color=condition), position=position_jitter(width=0.2, seed=123))+ #position = position_jitter(width = 0, height = 0.2)
+  geom_line(aes(group = participant, color=condition), position=position_jitter(width=0.2, seed=123)) +
+  labs(x="Timepoint of Data Aquisition", y="Percent of Correct Guesses")+
+    theme_light()
 
 
 # t-test takes differences (e.g. group 2 - 1)
@@ -114,7 +116,7 @@ t.test(all_olt_wide$`1`, all_olt_wide$`2`, paired=TRUE)
 
 
 
-
+# Script for data extraction:
 ```{r}
 # Get all csv OLT files
 files <- list.files(
@@ -158,4 +160,11 @@ write.csv(all_data,
           row.names = FALSE)
 
 ```
+
+
+
+```{r}
+
+```
+
 
