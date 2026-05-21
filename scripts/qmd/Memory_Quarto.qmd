@@ -50,10 +50,18 @@ all_olt <- read_csv("data/processed/olt_processed/all_olt.csv",
         "9")), timepoint = col_factor(levels = c("1", 
         "2")), file = col_skip()))
 
+all_olt_min <- read_csv("data/processed/all_olt_min.csv", 
+    col_types = cols(participant = col_factor(levels = c("1", 
+        "2", "3", "4", "5", "6", "7", "8", 
+        "9")), timepoint = col_factor(levels = c("1", 
+        "2")), file = col_skip()))
+
+
 condition<-condition%>%
   rename(participant="participant_id")
 
 all_olt$condition<-rep(condition$Condition, each=2)
+all_olt_min$condition<-rep(condition$Condition, each=2)
 
 ```
 
@@ -62,14 +70,41 @@ all_olt$condition<-rep(condition$Condition, each=2)
 :::
 
 ```{r}
+
+#For max 
 ggpairs(all_olt)
 hist(all_olt$percent_correct)
 hist(all_olt$time_for_answer_correct)
+
+#For min 
+ggpairs(all_olt_min)
+hist(all_olt_min$percent_correct)
+hist(all_olt_min$time_for_answer_correct)
+
+
 ```
 
 ```{r}
 
+#Plots for max 
 ggplot(all_olt, aes(x=timepoint, y=percent_correct))+
+  geom_boxplot(outliers = FALSE)+
+  geom_point(aes(color=participant), position=position_jitter(width=0.2, seed=123)) + 
+  geom_line(aes(group = participant, color = participant), position=position_jitter(width=0.2, seed=123))+
+  labs(x="Timepoint of Data Acquisition", y="Percent of Correct Guesses")+
+    theme_light()
+
+
+ggplot(all_olt, aes(x=timepoint, y=percent_correct))+
+  geom_boxplot(outliers = FALSE)+
+  geom_point(aes(color=condition), position=position_jitter(width=0.2, seed=123))+ #position = position_jitter(width = 0, height = 0.2)
+  geom_line(aes(group = participant, color=condition), position=position_jitter(width=0.2, seed=123)) +
+  labs(x="Timepoint of Data Acquisition", y="Percent of Correct Guesses")+
+    theme_light()
+
+
+#Plots for min
+ggplot(all_olt_min, aes(x=timepoint, y=percent_correct))+
   geom_boxplot(outliers = FALSE)+
   geom_point(aes(color=participant), position=position_jitter(width=0.2, seed=123)) + 
   geom_line(aes(group = participant, color = participant), position=position_jitter(width=0.2, seed=123))+
@@ -77,8 +112,7 @@ ggplot(all_olt, aes(x=timepoint, y=percent_correct))+
     theme_light()
 
 
-
-ggplot(all_olt, aes(x=timepoint, y=percent_correct))+
+ggplot(all_olt_min, aes(x=timepoint, y=percent_correct))+
   geom_boxplot(outliers = FALSE)+
   geom_point(aes(color=condition), position=position_jitter(width=0.2, seed=123))+ #position = position_jitter(width = 0, height = 0.2)
   geom_line(aes(group = participant, color=condition), position=position_jitter(width=0.2, seed=123)) +
@@ -86,7 +120,9 @@ ggplot(all_olt, aes(x=timepoint, y=percent_correct))+
     theme_light()
 
 
-# t-test takes differences (e.g. group 2 - 1)
+
+
+# t-test takes differences (e.g. group 2 - 1) FOR MAX
 library(tidyr)
 library(dplyr)
 all_olt_new <- all_olt %>% 
@@ -112,11 +148,41 @@ all_olt_wide %>%
 
 t.test(all_olt_wide$`1`, all_olt_wide$`2`, paired=TRUE)
 #no statistically significant difference -> also not in boxplots
+#p-value = 0.4028
+
+
+
+# t-test takes differences (e.g. group 2 - 1) FOR MIN
+all_olt_min_new <- all_olt_min %>% 
+  select(-time_for_answer_correct)
+
+
+
+all_olt_min_wide <- all_olt_min_new %>% 
+  pivot_wider(names_from = timepoint, values_from = percent_correct) 
+
+all_olt_min_wide %>% 
+  group_by(participant) %>% 
+  reframe(extra_diff = `2`-`1`,
+          x = factor(0)) %>% 
+  ggplot(aes(y = extra_diff, x = x)) +
+  geom_boxplot() +
+  geom_hline(yintercept = 0, color = "red") +
+  geom_point(aes(color = participant), size = 2) +
+  theme_classic() +
+  labs(
+    y = "Response difference group 2-1"
+  )
+
+t.test(all_olt_min_wide$`1`, all_olt_min_wide$`2`, paired=TRUE)
+#p-value = 0.2016
+
+
+
 ```
 
-
-
 # Script for data extraction:
+
 ```{r}
 # Get all csv OLT files
 files <- list.files(
@@ -161,10 +227,6 @@ write.csv(all_data,
 
 ```
 
-
-
 ```{r}
 
 ```
-
-
