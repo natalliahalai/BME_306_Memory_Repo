@@ -1,0 +1,180 @@
+---
+title: "Memory vs Sleep Phases"
+toc: true
+date: today
+author: "Natallia Halai and Angela Textor"
+format: 
+  html:
+    
+    embed-resources: true
+    code-fold: true
+    number-sections: true
+editor: visual
+editor_options:
+  
+  
+  chunk_output_type: console
+project:
+  
+  output-dir: output
+  execute-dir: project
+execute: 
+  warning: false
+  error: false
+  freeze: true
+---
+
+:::{comment_to_self}
+
+One NA value from participant 9 epoch 58 was replaced by N1 
+
+:::
+```{r}
+#| label: library_loading
+#| include: false
+
+library(ggplot2)
+library(ggfortify)
+library(dplyr)
+library(GGally)
+library(DHARMa)
+library(tidyverse)
+
+```
+
+
+```{r}
+#| label: data-loading
+#| include: false
+
+condition<-read_csv("data/processed/Condition_participants.csv", 
+    col_types = cols(participant_id = col_factor(levels = c("1", 
+        "2", "3", "4", "5", "6", "7", "8", 
+        "9")), Condition = col_factor(levels = c("Coffein", 
+        "None"))))
+
+all_scoring <- read_csv("data/processed/scoring_processed/all_scoring.csv", 
+col_types = cols(stage = col_factor(levels = c("Wake", "N1", "N2", "N3", "REM")), digit = col_skip()))
+
+all_olt<-read_csv("data/processed/olt_processed/all_olt.csv", 
+    col_types = cols(participant = col_factor(levels = c("1", 
+        "2", "3", "4", "5", "6", "7", "8", 
+        "9")), timepoint = col_factor(levels = c("1", 
+        "2")), file = col_skip()))
+
+all_olt$condition<-rep(condition$Condition, each=2)
+all_scoring$participant<-factor(all_scoring$participant, levels=c(1,2,3,4,5,6,7,8,9))
+all_scoring$condition<-ifelse(all_scoring$participant %in% c(1, 5, 6, 9), "Coffein", "None")
+
+```
+
+
+#Per Participant Sleep Stage Duration
+```{r}
+#| label: extraction-Phases
+
+#length of each sleep stage per participant
+number_stages<-table(all_scoring$participant, all_scoring$stage)
+number_stages<-number_stages*30
+number_stages<-data.frame(number_stages)
+number_stages<-number_stages%>%
+  rename(Participant=Var1, Stage=Var2, Time=Freq)
+
+#Adding the time for Wake in 3
+number_stages[number_stages$Participant==3 & number_stages$Stage=="Wake",]$Time<-2880
+
+number_stages<-number_stages%>%
+  group_by(Participant)%>%
+  mutate(Time_percent=Time/sum(Time))
+
+ggplot(number_stages, aes(x=Participant, y=Time_percent, fill=Stage))+
+  geom_bar(stat="identity")+
+  scale_fill_manual(values=c(
+    "Wake"= "lightsalmon",
+    "N1"="lightgoldenrod1",
+    "N2"="lightgreen",
+    "N3"="lightskyblue",
+    "REM"="violet"
+  ))
+
+ggplot(number_stages, aes(x=Participant, y=Time, fill=Stage))+
+  geom_bar(stat="identity")+
+  scale_fill_manual(values=c(
+    "Wake"= "lightsalmon",
+    "N1"="lightgoldenrod1",
+    "N2"="lightgreen",
+    "N3"="lightskyblue",
+    "REM"="violet"
+  ))
+  
+
+
+
+```
+
+
+#Per Condition Sleep Stage Duration
+```{r}
+number_times_condition<-table(all_scoring$condition, all_scoring$stage)*30
+number_times_condition[2,1]<-number_times_condition[2,1]+2880 #adding the missing participant 3s data of Wake
+
+number_times_condition<-data.frame(number_times_condition)
+
+number_times_condition<-number_times_condition%>%
+  rename(Condition=Var1, Stage=Var2, Time=Freq)
+
+number_times_condition$Condition<-ifelse(number_times_condition$Condition=="None", 0, 1)
+number_times_condition$Condition<-factor(number_times_condition$Condition, levels=c(0,1), labels=c("None", "Coffein"))
+
+
+number_times_condition<-number_times_condition%>%
+  group_by(Condition)%>%
+  mutate(Time_percentage=Time/sum(Time))
+
+ggplot(number_times_condition, aes(x=Condition, y=Time_percentage, fill=Stage))+
+  geom_bar(stat="identity")+
+  scale_fill_manual(values=c(
+    "Wake"= "lightsalmon",
+    "N1"="lightgoldenrod1",
+    "N2"="lightgreen",
+    "N3"="lightskyblue",
+    "REM"="violet"
+  ))
+
+
+ggplot(number_times_condition, aes(x=Condition, y=Time, fill=Stage))+
+  geom_bar(stat="identity")+
+  scale_fill_manual(values=c(
+    "Wake"= "lightsalmon",
+    "N1"="lightgoldenrod1",
+    "N2"="lightgreen",
+    "N3"="lightskyblue",
+    "REM"="violet"
+  ))
+
+t.test(Time~Condition, data = number_times_condition)
+#no difference in stage times between conditions (t.test)
+
+```
+
+
+
+```{r}
+number_stages$condition<-ifelse(number_stages$Participant %in% c(1,5,6,9), 1, 0)
+number_stages$condition<-factor(number_stages$condition, levels=c(0,1), labels=c("None", "Coffein"))
+
+t.test(Time~condition, data = subset(number_stages, Stage == "Wake"))
+t.test(Time~condition, data = subset(number_stages, Stage == "N1"))
+t.test(Time~condition, data = subset(number_stages, Stage == "N2"))
+t.test(Time~condition, data = subset(number_stages, Stage == "N3"))
+
+```
+
+
+
+```{r}
+
+
+
+```
+
