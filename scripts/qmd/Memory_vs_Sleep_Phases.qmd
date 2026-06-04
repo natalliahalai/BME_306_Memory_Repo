@@ -5,23 +5,22 @@ date: today
 author: "Natallia Halai and Angela Textor"
 format: 
   html:
-    
     embed-resources: true
     code-fold: true
     number-sections: true
+    
 editor: visual
 editor_options:
+  chunk-output-type: console
   
-  
-  chunk_output_type: console
 project:
-  
   output-dir: output
   execute-dir: project
+  
 execute: 
   warning: false
   error: false
-  freeze: true
+  freeze: false
 ---
 
 :::{comment_to_self}
@@ -49,7 +48,7 @@ library(tidyverse)
 
 condition<-read_csv("data/processed/Condition_participants.csv", 
     col_types = cols(participant_id = col_factor(levels = c("1", 
-        "2", "3", "4", "5", "6", "7", "8", 
+        "2", "3", "4", "5", "6", "7", "8",
         "9")), Condition = col_factor(levels = c("Coffein", 
         "None"))))
 
@@ -69,7 +68,7 @@ all_scoring$condition<-ifelse(all_scoring$participant %in% c(1, 5, 6, 9), "Coffe
 ```
 
 
-#Per Participant Sleep Stage Duration
+# Per Participant Sleep Stage Duration
 ```{r}
 #| label: extraction-Phases
 
@@ -83,11 +82,8 @@ number_stages<-number_stages%>%
 #Adding the time for Wake in 3
 number_stages[number_stages$Participant==3 & number_stages$Stage=="Wake",]$Time<-2880
 
-number_stages<-number_stages%>%
-  group_by(Participant)%>%
-  mutate(Time_percent=Time/sum(Time))
 
-ggplot(number_stages, aes(x=Participant, y=Time_percent, fill=Stage))+
+ggplot(number_stages, aes(x=Participant, y=Time/60, fill=Stage))+
   geom_bar(stat="identity")+
   scale_fill_manual(values=c(
     "Wake"= "lightsalmon",
@@ -95,25 +91,15 @@ ggplot(number_stages, aes(x=Participant, y=Time_percent, fill=Stage))+
     "N2"="lightgreen",
     "N3"="lightskyblue",
     "REM"="violet"
-  ))
-
-ggplot(number_stages, aes(x=Participant, y=Time, fill=Stage))+
-  geom_bar(stat="identity")+
-  scale_fill_manual(values=c(
-    "Wake"= "lightsalmon",
-    "N1"="lightgoldenrod1",
-    "N2"="lightgreen",
-    "N3"="lightskyblue",
-    "REM"="violet"
-  ))
-  
-
+  ))+
+  ylab("Time (min)")+
+  theme_light()
 
 
 ```
 
 
-#Per Condition Sleep Stage Duration
+# Per Condition Sleep Stage Duration
 ```{r}
 number_times_condition<-table(all_scoring$condition, all_scoring$stage)*30
 number_times_condition[2,1]<-number_times_condition[2,1]+2880 #adding the missing participant 3s data of Wake
@@ -127,11 +113,7 @@ number_times_condition$Condition<-ifelse(number_times_condition$Condition=="None
 number_times_condition$Condition<-factor(number_times_condition$Condition, levels=c(0,1), labels=c("None", "Coffein"))
 
 
-number_times_condition<-number_times_condition%>%
-  group_by(Condition)%>%
-  mutate(Time_percentage=Time/sum(Time))
-
-ggplot(number_times_condition, aes(x=Condition, y=Time_percentage, fill=Stage))+
+ggplot(number_times_condition, aes(x=Condition, y=Time/60, fill=Stage))+
   geom_bar(stat="identity")+
   scale_fill_manual(values=c(
     "Wake"= "lightsalmon",
@@ -139,26 +121,14 @@ ggplot(number_times_condition, aes(x=Condition, y=Time_percentage, fill=Stage))+
     "N2"="lightgreen",
     "N3"="lightskyblue",
     "REM"="violet"
-  ))
-
-
-ggplot(number_times_condition, aes(x=Condition, y=Time, fill=Stage))+
-  geom_bar(stat="identity")+
-  scale_fill_manual(values=c(
-    "Wake"= "lightsalmon",
-    "N1"="lightgoldenrod1",
-    "N2"="lightgreen",
-    "N3"="lightskyblue",
-    "REM"="violet"
-  ))
-
-t.test(Time~Condition, data = number_times_condition)
-#no difference in stage times between conditions (t.test)
+  ))+
+  ylab("Time (min)")+
+  theme_light()
 
 ```
 
 
-
+# T tests for each sleep stage
 ```{r}
 number_stages$condition<-ifelse(number_stages$Participant %in% c(1,5,6,9), 1, 0)
 number_stages$condition<-factor(number_stages$condition, levels=c(0,1), labels=c("None", "Coffein"))
@@ -171,9 +141,67 @@ t.test(Time~condition, data = subset(number_stages, Stage == "N3"))
 ```
 
 
+# Models:
 
+## Overfitting models 
+```{r}
+#can the model predict the improvement/no improvement in the memory test based on the time asleep in phases and the conditioning of the patients
+
+all_olt_new <- all_olt %>% 
+  select(-time_for_answer_correct)
+
+all_olt_wide <- all_olt_new %>% 
+  pivot_wider(names_from = timepoint, values_from = percent_correct) #making new columns with the values from percent
+
+all_olt_wide$difference<-all_olt_wide%>%
+  group_by(participant)%>%
+  reframe(extra_diff= `2`-`1`,
+          x=factor(0))
+
+#adding the phases time sleep into the wide data frame
+
+number_stages_wide<-number_stages%>%
+  pivot_wider(names_from = Stage, values_from = Time)
+
+all_olt_wide<-all_olt_wide%>%
+  rename(Participant="participant")
+
+#final dataset with all information for a logistic regression
+all_olt_stages_wide<-left_join(all_olt_wide, number_stages_wide, by=c("Participant","condition"))
+all_olt_stages_wide$condition<-factor(all_olt_stages_wide$condition, levels=c("None", "Coffein"))
+
+
+#Overfitting models:
+
+model1<-lm(`2`~`1`+condition+Wake+N1+N2+N3, data=all_olt_stages_wide)
+summary(model1) # -> high R squared -> overfitting risk
+
+model2<-lm(`2`~`1`+Wake+N1+N2+N3, data=all_olt_stages_wide)
+summary(model2)
+
+```
+
+
+## Combination of variables -> deep sleep stage model
 ```{r}
 
+all_olt_stages_wide$deep_sleep<-all_olt_stages_wide$N2+all_olt_stages_wide$N3
+all_olt_stages_wide$difference<-all_olt_stages_wide$`2`- all_olt_stages_wide$`1`
+
+#Mdel
+model3<-lm(difference~deep_sleep+ condition, data=all_olt_stages_wide)
+sum_m3<-summary(model3) 
+
+knitr::kable(sum_m3$coefficients)
+
+ggplot(all_olt_stages_wide, aes(x=deep_sleep, y=difference))+
+  geom_point()+
+  geom_smooth(method="lm")+
+  xlab("Time in deep sleep")+
+  ylab("Difference in memory score")+
+  theme_light()
+
+(cor(all_olt_stages_wide$deep_sleep, all_olt_stages_wide$difference))
 
 
 ```

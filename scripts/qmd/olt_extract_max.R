@@ -22,9 +22,9 @@ all_data <- lapply(files, function(f) {
   
   
   oltd <- read.csv(f)
-  minrounds <- min(oltd$cued_recall_round,na.rm = T)
+  maxrounds <- max(oltd$cued_recall_round,na.rm = T)
   olt_info <- oltd %>% 
-    filter(cued_recall_round %in% minrounds) %>% 
+    filter(cued_recall_round %in% maxrounds) %>% 
     summarize(percent_correct = sum(answer)/length(answer),
               time_for_answer_correct = mean(time_for_answer[answer == 1]))
   
@@ -36,5 +36,5 @@ all_data <- lapply(files, function(f) {
 })
 all_data <- do.call(rbind, all_data)
 write.csv(all_data,
-          file = "~/data/all_olt_min.csv",
+          file = "~/data/all_olt.csv",
           row.names = FALSE)

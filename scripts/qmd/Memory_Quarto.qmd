@@ -1,29 +1,32 @@
 ---
 title: "Memory Subpart of BME 306 Study"
+author: "Natallia Halai und Angela Textor"
 date: today
 toc: true
-autor: "Natallia Halai und Angela Textor"
 format: 
   html:
-    
     embed-resources: true
     number-sections: true
-    code_fold: true
+    code-fold: true
+    
+    
 project:
-  
   output_dir: output
   execute_dir: project
+  
+  
 editor: visual
 editor_options: 
-  chunk_output_type: true
+  chunk_output_type: console
 execute: 
   warning: false
   error: false
-  freeze: true
+  freeze: false
 ---
 
 ```{r}
 #| label: libraries
+#| include: false
 
 library(readr)
 library(ggplot2)
@@ -65,16 +68,20 @@ all_olt_min$condition<-rep(condition$Condition, each=2)
 
 ```
 
-::: {comment_to_self}
--\> timepoint 2 score under 0.6 -\> time to answer correct??? definition -\> how many memory pairs were there -\> where is the 3rd patients EEG -\> want to see the improvement in memory with increased N3 phase
-:::
+# Exploring data
 
+## for maximal tries Script
 ```{r}
 
 #For max 
 ggpairs(all_olt)
 hist(all_olt$percent_correct)
 hist(all_olt$time_for_answer_correct)
+
+```
+
+## for minimum tries Script
+```{r}
 
 #For min 
 ggpairs(all_olt_min)
@@ -84,43 +91,69 @@ hist(all_olt_min$time_for_answer_correct)
 
 ```
 
+
+# Plots for maximum tries Script
 ```{r}
+#| label: plots-max
+
 
 #Plots for max 
 ggplot(all_olt, aes(x=timepoint, y=percent_correct))+
   geom_boxplot(outliers = FALSE)+
-  geom_point(aes(color=participant), position=position_jitter(width=0.2, seed=123)) + 
-  geom_line(aes(group = participant, color = participant), position=position_jitter(width=0.2, seed=123))+
+  geom_point(aes(color=participant), cex=3, position=position_jitter(height=0,width=0.2, seed=123)) + 
+  geom_line(aes(group = participant, color = participant), cex=1, position=position_jitter(height=0, width=0.2, seed=123))+
+  labs(x="Timepoint of Data Acquisition", y="Percent of Correct Guesses")+
+    theme_light()
+
+
+ggplot(all_olt, aes(x=timepoint, y=percent_correct))+
+  geom_violin()+
+  geom_point(aes(color=participant), cex=3, position=position_jitter(height=0,width=0.2, seed=123)) + 
+  geom_line(aes(group = participant, color = participant), cex=1, position=position_jitter(height=0, width=0.2, seed=123))+
   labs(x="Timepoint of Data Acquisition", y="Percent of Correct Guesses")+
     theme_light()
 
 
 ggplot(all_olt, aes(x=timepoint, y=percent_correct))+
   geom_boxplot(outliers = FALSE)+
-  geom_point(aes(color=condition), position=position_jitter(width=0.2, seed=123))+ #position = position_jitter(width = 0, height = 0.2)
-  geom_line(aes(group = participant, color=condition), position=position_jitter(width=0.2, seed=123)) +
+  geom_point(aes(color=condition), cex=3, position=position_jitter(height=0,width=0.2, seed=123))+ #position = position_jitter(width = 0, height = 0.2)
+  geom_line(aes(group = participant, color=condition),cex=1, position=position_jitter(height=0,width=0.2, seed=123)) +
   labs(x="Timepoint of Data Acquisition", y="Percent of Correct Guesses")+
     theme_light()
 
 
+ggplot(all_olt, aes(x=timepoint, y=percent_correct))+
+  geom_boxplot(outliers = FALSE, aes(group=interaction(timepoint, condition), fill=condition), position = position_dodge2(width = 0.8), alpha=0.3)+
+  geom_point(position = position_jitterdodge(jitter.width = 0.8), aes(color=condition), cex=3)+
+  ylab("Percent of Correct Guesses")+
+  theme_light()
+
+```
+
+
+```{r}
+#| label: plots-min
+
 #Plots for min
 ggplot(all_olt_min, aes(x=timepoint, y=percent_correct))+
   geom_boxplot(outliers = FALSE)+
-  geom_point(aes(color=participant), position=position_jitter(width=0.2, seed=123)) + 
-  geom_line(aes(group = participant, color = participant), position=position_jitter(width=0.2, seed=123))+
+  geom_point(aes(color=participant), position=position_jitter(height=0, width=0.2, seed=123), cex=3) + 
+  geom_line(aes(group = participant, color = participant), position=position_jitter(height=0, width=0.2, seed=123), cex=1.5)+
   labs(x="Timepoint of Data Aquisition", y="Percent of Correct Guesses")+
     theme_light()
 
 
 ggplot(all_olt_min, aes(x=timepoint, y=percent_correct))+
-  geom_boxplot(outliers = FALSE)+
-  geom_point(aes(color=condition), position=position_jitter(width=0.2, seed=123))+ #position = position_jitter(width = 0, height = 0.2)
-  geom_line(aes(group = participant, color=condition), position=position_jitter(width=0.2, seed=123)) +
+  geom_boxplot(outliers = FALSE, aes(group=interaction(timepoint, condition), fill=condition), alpha=0.3, position=position_dodge2(width=0.8))+
+  geom_point(aes(color=condition), position=position_jitterdodge(jitter.width=0.8), cex=3)+
   labs(x="Timepoint of Data Aquisition", y="Percent of Correct Guesses")+
     theme_light()
 
+```
 
-
+# T tests for MAX
+```{r}
+#| label: t-max
 
 # t-test takes differences (e.g. group 2 - 1) FOR MAX
 library(tidyr)
@@ -146,16 +179,52 @@ all_olt_wide %>%
     y = "Response difference group 2-1"
   )
 
+all_olt_wide<-all_olt_wide %>% 
+  group_by(participant) %>% 
+  mutate(Difference=`2`-`1`)
+all_olt_wide$Condition_Binary<-ifelse(all_olt_wide$condition=="None", 0, 1)
+all_olt_wide$Condition_Binary<-factor(all_olt_wide$Condition_Binary, levels=c(0,1), labels=c("None", "Coffein"))
+
+
 t.test(all_olt_wide$`1`, all_olt_wide$`2`, paired=TRUE)
 #no statistically significant difference -> also not in boxplots
 #p-value = 0.4028
 
 
+t.test(Difference~Condition_Binary, all_olt_wide)
+#p-value = 0.5963
+
+ggplot(all_olt_wide, aes(x=Condition_Binary, y=Difference))+
+  geom_boxplot(aes(group=Condition_Binary, fill=Condition_Binary),alpha=.3)+
+  geom_point(aes(color=Condition_Binary), cex=3, position = position_jitter(height=0, width=0.2))+
+  xlab(" ")+
+  theme_light()
+
+```
+
+# Mixed Effects model (MAX)
+```{r}
+#| label: lmer-max
+
+
+library(lmerTest)
+
+model_max <- lmer(percent_correct ~ timepoint * condition + (1 | participant),
+              data = all_olt)
+
+library(knitr)
+knitr::kable(coefficients(summary(model_max)))
+
+```
+
+
+# T tests for MIN
+```{r}
+#| label: t-min
 
 # t-test takes differences (e.g. group 2 - 1) FOR MIN
 all_olt_min_new <- all_olt_min %>% 
   select(-time_for_answer_correct)
-
 
 
 all_olt_min_wide <- all_olt_min_new %>% 
@@ -174,59 +243,35 @@ all_olt_min_wide %>%
     y = "Response difference group 2-1"
   )
 
+
 t.test(all_olt_min_wide$`1`, all_olt_min_wide$`2`, paired=TRUE)
 #p-value = 0.2016
 
 
+all_olt_min_wide<-all_olt_min_wide %>% 
+  group_by(participant) %>% 
+  mutate(Difference=`2`-`1`)
+all_olt_min_wide$Condition_Binary<-ifelse(all_olt_min_wide$condition=="None", 0, 1)
+all_olt_min_wide$Condition_Binary<-factor(all_olt_min_wide$Condition_Binary, levels=c(0,1), labels=c("None", "Coffein"))
+
+t.test(Difference~Condition_Binary, all_olt_min_wide)
+#p-value = 0.6069 no difference between conditions
+
+ggplot(all_olt_min_wide, aes(x=Condition_Binary, y=Difference))+
+  geom_boxplot(aes(group=Condition_Binary, fill=Condition_Binary),alpha=.3)+
+  geom_point(aes(color=Condition_Binary), cex=3, position = position_jitter(height=0, width=0.2))+
+  xlab(" ")+
+  theme_light()
 
 ```
 
-# Script for data extraction:
-
+# Mixed effects model (MIN)
 ```{r}
-# Get all csv OLT files
-files <- list.files(
-  "data/raw/OLT_Data/",
-  pattern = "\\.csv$",
-  full.names = TRUE,
-  recursive = TRUE
-)
+#| label: lmer-min
 
+model_min <- lmer(percent_correct ~ timepoint * condition + (1 | participant),
+              data = all_olt_min)
 
-library(readr)
-library(dplyr)
-library(stringr)
-
-all_data <- lapply(files, function(f) {
-
-  # get info
-  parts <- str_split(f, .Platform$file.sep)[[1]]
-  
-  participant <- strsplit(parts[grepl("Participant_", parts)], "_")[[1]][2]
-  timepoint   <- strsplit(parts[grepl("Session_", parts)], "_")[[1]][2]
-  filename    <- tail(parts, 1)
-  
-  
-  oltd <- read.csv(f)
-  minrounds <- min(oltd$cued_recall_round,na.rm = T)
-  olt_info <- oltd %>% 
-    filter(cued_recall_round %in% minrounds) %>% 
-    summarize(percent_correct = sum(answer)/length(answer),
-              time_for_answer_correct = mean(time_for_answer[answer == 1]))
-  
-  olt_info$participant = participant
-  olt_info$timepoint = timepoint
-  olt_info$file = filename
-  
-  olt_info
-})
-all_data <- do.call(rbind, all_data)
-write.csv(all_data,
-          file = "data/processed/all_olt_min.csv",
-          row.names = FALSE)
-
-```
-
-```{r}
+knitr::kable(coefficients(summary(model_min)))
 
 ```
