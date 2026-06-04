@@ -1,7 +1,7 @@
 <table>
 <tr>
 <td width="35%>
-<img src="brain_image.png" width="300>
+<img src="brain_image.png" width="300">
 </td>
 
 <td>
