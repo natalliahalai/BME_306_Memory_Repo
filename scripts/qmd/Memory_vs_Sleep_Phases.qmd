@@ -63,7 +63,8 @@ all_olt<-read_csv("data/processed/olt_processed/all_olt.csv",
 
 all_olt$condition<-rep(condition$Condition, each=2)
 all_scoring$participant<-factor(all_scoring$participant, levels=c(1,2,3,4,5,6,7,8,9))
-all_scoring$condition<-ifelse(all_scoring$participant %in% c(1, 5, 6, 9), "Coffein", "None")
+all_scoring$condition<-ifelse(all_scoring$participant %in% c(1, 5, 6, 9), "Caffeine", "None")
+all_olt$condition<-ifelse(all_olt$condition=="Coffein", "Caffeine", "None")
 
 ```
 
@@ -110,7 +111,7 @@ number_times_condition<-number_times_condition%>%
   rename(Condition=Var1, Stage=Var2, Time=Freq)
 
 number_times_condition$Condition<-ifelse(number_times_condition$Condition=="None", 0, 1)
-number_times_condition$Condition<-factor(number_times_condition$Condition, levels=c(0,1), labels=c("None", "Coffein"))
+number_times_condition$Condition<-factor(number_times_condition$Condition, levels=c(0,1), labels=c("None", "Caffeine"))
 
 
 ggplot(number_times_condition, aes(x=Condition, y=Time/60, fill=Stage))+
@@ -131,7 +132,7 @@ ggplot(number_times_condition, aes(x=Condition, y=Time/60, fill=Stage))+
 # T tests for each sleep stage
 ```{r}
 number_stages$condition<-ifelse(number_stages$Participant %in% c(1,5,6,9), 1, 0)
-number_stages$condition<-factor(number_stages$condition, levels=c(0,1), labels=c("None", "Coffein"))
+number_stages$condition<-factor(number_stages$condition, levels=c(0,1), labels=c("None", "Caffeine"))
 
 t.test(Time~condition, data = subset(number_stages, Stage == "Wake"))
 t.test(Time~condition, data = subset(number_stages, Stage == "N1"))
@@ -168,7 +169,7 @@ all_olt_wide<-all_olt_wide%>%
 
 #final dataset with all information for a logistic regression
 all_olt_stages_wide<-left_join(all_olt_wide, number_stages_wide, by=c("Participant","condition"))
-all_olt_stages_wide$condition<-factor(all_olt_stages_wide$condition, levels=c("None", "Coffein"))
+all_olt_stages_wide$condition<-factor(all_olt_stages_wide$condition, levels=c("None", "Caffeine"))
 
 
 #Overfitting models:

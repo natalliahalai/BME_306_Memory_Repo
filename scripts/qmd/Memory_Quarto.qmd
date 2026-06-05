@@ -64,7 +64,12 @@ condition<-condition%>%
   rename(participant="participant_id")
 
 all_olt$condition<-rep(condition$Condition, each=2)
+all_olt$condition<-ifelse(all_olt$condition=="Coffein", "Caffeine", "None")
+all_olt$condition<-factor(all_olt$condition, levels=c("None", "Caffeine"))
+
 all_olt_min$condition<-rep(condition$Condition, each=2)
+all_olt_min$condition<-ifelse(all_olt_min$condition=="Coffein", "Caffeine", "None")
+
 
 ```
 
@@ -183,7 +188,7 @@ all_olt_wide<-all_olt_wide %>%
   group_by(participant) %>% 
   mutate(Difference=`2`-`1`)
 all_olt_wide$Condition_Binary<-ifelse(all_olt_wide$condition=="None", 0, 1)
-all_olt_wide$Condition_Binary<-factor(all_olt_wide$Condition_Binary, levels=c(0,1), labels=c("None", "Coffein"))
+all_olt_wide$Condition_Binary<-factor(all_olt_wide$Condition_Binary, levels=c(0,1), labels=c("None", "Caffeine"))
 
 
 t.test(all_olt_wide$`1`, all_olt_wide$`2`, paired=TRUE)
@@ -194,9 +199,9 @@ t.test(all_olt_wide$`1`, all_olt_wide$`2`, paired=TRUE)
 t.test(Difference~Condition_Binary, all_olt_wide)
 #p-value = 0.5963
 
-ggplot(all_olt_wide, aes(x=Condition_Binary, y=Difference))+
-  geom_boxplot(aes(group=Condition_Binary, fill=Condition_Binary),alpha=.3)+
-  geom_point(aes(color=Condition_Binary), cex=3, position = position_jitter(height=0, width=0.2))+
+ggplot(all_olt_wide, aes(x=condition, y=Difference))+
+  geom_boxplot(aes(group=condition, fill=condition),alpha=.3)+
+  geom_point(aes(color=condition), cex=3, position = position_jitter(height=0, width=0.2))+
   xlab(" ")+
   theme_light()
 
@@ -252,7 +257,7 @@ all_olt_min_wide<-all_olt_min_wide %>%
   group_by(participant) %>% 
   mutate(Difference=`2`-`1`)
 all_olt_min_wide$Condition_Binary<-ifelse(all_olt_min_wide$condition=="None", 0, 1)
-all_olt_min_wide$Condition_Binary<-factor(all_olt_min_wide$Condition_Binary, levels=c(0,1), labels=c("None", "Coffein"))
+all_olt_min_wide$Condition_Binary<-factor(all_olt_min_wide$Condition_Binary, levels=c(0,1), labels=c("None", "Caffeine"))
 
 t.test(Difference~Condition_Binary, all_olt_min_wide)
 #p-value = 0.6069 no difference between conditions
